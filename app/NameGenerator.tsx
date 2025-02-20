@@ -129,7 +129,7 @@ export default function NameGenerator() {
                   <h2 className="text-xl font-medium mb-2">{name.pinyin}</h2>
                   <p className="text-4xl mb-4 font-serif">{name.characters}</p>
                   <p className="text-gray-600 dark:text-gray-300">
-                    Meaning: <span className="font-medium">"{name.meaning}"</span>
+                    Meaning: <span className="font-medium">&quot;{name.meaning}&quot;</span>
                   </p>
                 </div>
               </div>
