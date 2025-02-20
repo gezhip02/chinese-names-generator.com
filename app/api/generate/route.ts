@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import type { Gender, ApiResponse } from '../../../types';
 
+
+
+
 // 添加常见百家姓数组
 const commonSurnames = [
   '李', '王', '张', '刘', '陈', '杨', '黄', '赵', '周', '吴',
