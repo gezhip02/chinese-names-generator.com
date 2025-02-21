@@ -31,7 +31,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-, "app/api/generate/route.ts", "app/api/generate/route.ts.bak0", "app/NameGenerator.tsx.bak1", "app/NameGenerator.tsx.bak00"  ],
+, "app/api/generate/route.ts", "app/NameGenerator.tsx" ],
   "exclude": [
     "node_modules"
   ]
