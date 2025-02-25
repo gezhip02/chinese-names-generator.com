@@ -1,4 +1,13 @@
+
+
 export type Gender = 'random' | 'male' | 'female';
+
+export interface NameMeaning {
+  zh: string;
+  en: string;
+  fil: string;
+  hi: string;
+}
 
 export interface GeneratedName {
   pinyin: string;
@@ -7,6 +16,6 @@ export interface GeneratedName {
 }
 
 export interface ApiResponse {
-  data: GeneratedName;
   error?: string;
+  data?: GeneratedName[];
 }

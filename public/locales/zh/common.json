@@ -1,0 +1,12 @@
+{
+  "welcome": "欢迎使用名字生成器",
+  "welcome_message": "欢迎使用世界上使用人数最多的语言。生成具有意义的汉字名字和正确的发音。",
+  "note": "注意：按照中文惯例，姓氏放在名字前面。",
+  "random": "随机",
+  "male": "男",
+  "female": "女",
+  "surname_placeholder": "姓氏",
+  "generating": "生成中...",
+  "generate_names": "生成名字",
+  "meaning": "含义"
+}

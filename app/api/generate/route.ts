@@ -40,89 +40,65 @@ export async function POST(request: Request) {
       );
     }
 
-    // 如果没有提供姓氏，随机生成一个
-    const { gender, surname = getRandomSurname() } = body;
-    
-    // const prompt = `Generate three unique and culturally appropriate Chinese names with the following requirements:
-    // - Gender: ${gender}
-    // - Surnames: Zhang
-    // - Include: surname and given name
-    // - Cultural background: poetry
-    // - Style: modern
-    // - Format needed for each name:
-    //   1. Pinyin (with tones)
-    //   2. Chinese characters
-    //   3. Meaning of the given name
-    // - Ensure each name is meaningful and fits the specified gender.
-    // - Avoid repeating names or using overly common combinations.
-    // - Introduce variation by considering different naming conventions, cultural references, and historical contexts.
-    // - Return the following in JSON format without adding any additional content:
-    // [
-    //   {
-    //     "pinyin": "surname givenname",
-    //     "characters": "姓名",
-    //     "meaning": "meaning of given name"
-    //   },
-    //   {
-    //     "pinyin": "surname givenname",
-    //     "characters": "姓名",
-    //     "meaning": "meaning of given name"
-    //   },
-    //   {
-    //     "pinyin": "surname givenname",
-    //     "characters": "姓名",
-    //     "meaning": "meaning of given name"
-    //   }
-    // ]`;
+
+    const { gender, surname = getRandomSurname(), language = 'en' } = body;
 
     const prompt = `Generate three unique and culturally appropriate Chinese names with the following requirements:
-    - Gender: ${gender}
-    - Surnames: ${surname}
-    - Include: surname and given name
-    - Cultural backgrounds (randomly choose different ones for each name):
-      * Classical poetry and literature
-      * Modern art and culture
-      * Nature and seasons
-      * Philosophy and wisdom
-      * Science and innovation
-    - Name characteristics (ensure variety):
-      * Use different number of characters in given names (one or two characters)
-      * Mix traditional and contemporary elements
-      * Incorporate different themes (e.g., strength, elegance, wisdom, creativity)
-      * Use varied tone combinations
-    - Format needed for each name:
-      1. Pinyin (with tones)
-      2. Chinese characters
-      3. Meaning of the given name
-    - Additional requirements:
-      * Each name must be completely different in style and theme
-      * Avoid common character combinations
-      * Consider multiple layers of meaning
-      * Use characters that are both meaningful and uncommon
-      * Ensure names are easy to pronounce while being distinctive
-    - Return the following in JSON format without adding any additional content:
-    [
-      {
-        "pinyin": "surname givenname",
-        "characters": "姓名",
-        "meaning": "meaning of given name"
-      },
-      {
-        "pinyin": "surname givenname",
-        "characters": "姓名",
-        "meaning": "meaning of given name"
-      },
-      {
-        "pinyin": "surname givenname",
-        "characters": "姓名",
-        "meaning": "meaning of given name"
-      }
-    ]
-    Important: Each generated name must be unique and different from previous responses. Avoid repetitive patterns or similar-sounding names.`
+- Gender: ${gender}
+- Surnames: ${surname}
+- Include: surname and given name
+- Cultural backgrounds (randomly choose different ones for each name):
+  * Classical poetry and literature
+  * Modern art and culture
+  * Nature and seasons
+  * Philosophy and wisdom
+  * Science and innovation
+- Name characteristics (ensure variety):
+  * Use different number of characters in given names (one or two characters)
+  * Mix traditional and contemporary elements
+  * Incorporate different themes (e.g., strength, elegance, wisdom, creativity)
+  * Use varied tone combinations
+- Format needed for each name:
+  1. Pinyin (with tones)
+  2. Chinese characters
+  3. Meaning of the given name in multiple languages:
+     * Chinese (zh): detailed meaning in Chinese
+     * English (en): detailed meaning in English
+     * Filipino (fil): detailed meaning in Filipino
+     * Hindi (hi): detailed meaning in Hindi
+- Additional requirements:
+  * Each name must be completely different in style and theme
+  * Avoid common character combinations
+  * Consider multiple layers of meaning
+  * Use characters that are both meaningful and uncommon
+  * Ensure names are easy to pronounce while being distinctive
+- Return the following in JSON format without adding any additional content:
+[
+  {
+    "pinyin": "surname givenname",
+    "characters": "姓名",
+    "meaning": {
+      "zh": "中文含义解释",
+      "en": "English meaning explanation",
+      "fil": "Kahulugan sa Filipino",
+      "hi": "हिंदी में अर्थ"
+    }
+  },
+  {
+    "pinyin": "surname givenname",
+    "characters": "姓名",
+    "meaning": {
+      "zh": "中文含义解释",
+      "en": "English meaning explanation",
+      "fil": "Kahulugan sa Filipino",
+      "hi": "हिंदी में अर्थ"
+    }
+  }
+]`;
 
     // 添加请求超时
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 300000); // 30秒超时
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30秒超时
 
     const response = await fetch(process.env.API_URL, {
       method: 'POST',
@@ -138,8 +114,8 @@ export async function POST(request: Request) {
             content: prompt
           }
         ],
-        temperature: 0.9, // 提高 temperature 值
-        max_tokens: 150
+        temperature: 0.7, // 提高 temperature 值
+        max_tokens: 1000
       }),
       signal: controller.signal
     });
@@ -165,13 +141,14 @@ export async function POST(request: Request) {
 
     try {
       let rawContent = result.choices[0].message.content;
-      
+      // console.log('123: ',result.choices[0].message.content);
+
       // 提取所有有效的JSON对象
       const extractValidObjects = (content: string) => {
         const objects: any[] = [];
         const regex = /\{(?:[^{}]|(?:\{[^{}]*\}))*\}/g;
         const matches = content.match(regex);
-        
+
         if (matches) {
           matches.forEach(match => {
             try {
@@ -189,6 +166,50 @@ export async function POST(request: Request) {
 
       let nameData = extractValidObjects(rawContent);
 
+      // console.log(nameData);
+
+      // // 清理和解析 JSON
+      // const parseNameData = (content: string) => {
+      //   try {
+      //     // 尝试寻找 JSON 数组的开始和结束
+      //     const startIdx = content.indexOf('[');
+      //     const endIdx = content.lastIndexOf(']') + 1;
+
+      //     if (startIdx === -1 || endIdx === -1) {
+      //       throw new Error('Invalid JSON format');
+      //     }
+
+      //     // 提取 JSON 数组字符串
+      //     const jsonStr = content.substring(startIdx, endIdx);
+
+      //     // 解析 JSON 数组
+      //     const nameData = JSON.parse(jsonStr);
+
+      //     // 验证数据结构
+      //     if (!Array.isArray(nameData)) {
+      //       throw new Error('Not an array');
+      //     }
+
+      //     // 验证每个对象的结构
+      //     return nameData.filter((item: any) =>
+      //       item.pinyin &&
+      //       item.characters &&
+      //       item.meaning &&
+      //       typeof item.meaning === 'object' &&
+      //       item.meaning.zh &&
+      //       item.meaning.en &&
+      //       item.meaning.fil &&
+      //       item.meaning.hi
+      //     );
+      //   } catch (e) {
+      //     console.error('JSON parsing error:', e);
+      //     return [];
+      //   }
+      // };
+
+      // let nameData = parseNameData(rawContent);
+
+
       // 只保留前3个有效的名字
       nameData = nameData.slice(0, 3);
 
@@ -197,8 +218,16 @@ export async function POST(request: Request) {
         throw new Error('No valid name data found');
       }
 
+
+      // 根据用户选择的语言返回相应的含义解释
+      const processedData = nameData.map((name: any) => ({
+        pinyin: name.pinyin,
+        characters: name.characters,
+        meaning: name.meaning[language] || name.meaning.en // 如果没有对应语言的翻译，则使用英文
+      }));
+
       // 返回成功结果，即使不满3个名字也返回
-      return NextResponse.json(nameData);
+      return NextResponse.json(processedData);
 
     } catch (parseError) {
       console.error('Error parsing name data:', parseError);
@@ -216,7 +245,7 @@ export async function POST(request: Request) {
         { status: 408 }
       );
     }
-    
+
     if (error.message === 'Missing API configuration') {
       return NextResponse.json(
         { error: 'Server configuration error' },

@@ -1,0 +1,12 @@
+{
+  "welcome": "Welcome to the Name Generator",
+  "welcome_message": "Welcome to the most-spoken language in the world. Generate authentic Chinese names with meaningful characters and proper pronunciation.",
+  "note": "Note: Following Chinese convention, surnames are placed before given names.",
+  "random": "Random",
+  "male": "Male",
+  "female": "Female",
+  "surname_placeholder": "Surname",
+  "generating": "Generating...",
+  "generate_names": "Generate names",
+  "meaning": "Meaning"
+}
