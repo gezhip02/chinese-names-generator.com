@@ -1,0 +1,12 @@
+{
+  "welcome": "Maligayang pagdating sa Name Generator",
+  "welcome_message": "Maligayang pagdating sa pinakamaraming ginagamit na wika sa mundo. Gumawa ng tunay na mga pangalan sa Tsina at may kahulugan at tamang pagbigkas.",
+  "note": "Tandaan: Sumunod sa konvensyon ng Tsina, ang apelyido ay nasa harap ng pangalan.",
+  "random": "Random",
+  "male": "Lalaki",
+  "female": "Babae",
+  "surname_placeholder": "Apelyido",
+  "generating": "Nag-generate...",
+  "generate_names": "Gumawa ng mga pangalan",
+  "meaning": "Kahulugan"
+}

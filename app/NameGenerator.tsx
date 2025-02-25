@@ -1,14 +1,31 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Sparkles, User2, UserRound, Loader2 } from 'lucide-react';
 import type { Gender, GeneratedName } from '@/types';
+import LanguageSelector from '../components/LanguageSelector';
+
+// Import all language files
+import en from '../public/i18n/locales/en';
+import zh from '../public/i18n/locales/zh';
+import fil from '../public/i18n/locales/fil';
+import hi from '../public/i18n/locales/hi';
+
+const translations = { en, zh, fil, hi };
 
 export default function NameGenerator() {
+  const [language, setLanguage] = useState('en');
   const [gender, setGender] = useState<Gender>('male');
   const [surname, setSurname] = useState<string>();
   const [generatedNames, setGeneratedNames] = useState<GeneratedName[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  const t = translations[language as keyof typeof translations];
+
+  const handleLanguageChange = (newLang: string) => {
+    setLanguage(newLang);
+    setGeneratedNames([]); // 清空生成的结果
+  };
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -20,7 +37,7 @@ export default function NameGenerator() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ gender, surname }),
+        body: JSON.stringify({ gender, surname , language}),
       });
       
       const data = await response.json();
@@ -37,19 +54,38 @@ export default function NameGenerator() {
     }
   };
 
+  // Save language preference
+  useEffect(() => {
+    localStorage.setItem('preferredLanguage', language);
+  }, [language]);
+
+  // Load language preference
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem('preferredLanguage');
+    if (savedLanguage) {
+      setLanguage(savedLanguage);
+    }
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-4 sm:p-6 md:p-8">
       <div className="max-w-4xl mx-auto">
+        <div className="flex justify-end mb-4">
+          <LanguageSelector
+            currentLang={language}
+            onLanguageChange={handleLanguageChange}
+          />
+        </div>
+
         <div className="text-center mb-12">
           <h1 className="text-4xl sm:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-rose-600 to-violet-600 mb-4">
-            Chinese Name Generator
+            {t.title}
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-300 mb-2">
-            Welcome to the most-spoken language in the world. Generate authentic Chinese names 
-            with meaningful characters and proper pronunciation.
+            {t.subtitle}
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-400 italic">
-            Note: Following Chinese convention, surnames are placed before given names.
+            {t.note}
           </p>
         </div>
 
@@ -57,9 +93,9 @@ export default function NameGenerator() {
           <div className="flex flex-col md:flex-row gap-6 items-center">
             <div className="flex flex-wrap gap-4">
               {[
-                { value: 'random', icon: Sparkles, label: 'Random' },
-                { value: 'male', icon: User2, label: 'Male' },
-                { value: 'female', icon: UserRound, label: 'Female' }
+                { value: 'random', icon: Sparkles, label: t.random },
+                { value: 'male', icon: User2, label: t.male },
+                { value: 'female', icon: UserRound, label: t.female }
               ].map(({ value, icon: Icon, label }) => (
                 <label key={value} className="cursor-pointer">
                   <input
@@ -86,7 +122,7 @@ export default function NameGenerator() {
                 type="text"
                 value={surname}
                 onChange={(e) => setSurname(e.target.value)}
-                placeholder="Surname"
+                placeholder={t.surname}
                 className="px-4 py-2 rounded-lg border dark:border-gray-600 
                   bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-rose-500 outline-none
                   w-32"
@@ -103,10 +139,10 @@ export default function NameGenerator() {
                 {loading ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    Generating...
+                    {t.generating}
                   </>
                 ) : (
-                  'Generate names'
+                  t.generateNames
                 )}
               </button>
             </div>
@@ -129,7 +165,7 @@ export default function NameGenerator() {
                   <h2 className="text-xl font-medium mb-2">{name.pinyin}</h2>
                   <p className="text-4xl mb-4 font-serif">{name.characters}</p>
                   <p className="text-gray-600 dark:text-gray-300">
-                    Meaning: <span className="font-medium">&quot;{name.meaning}&quot;</span>
+                    {t.meaning}: <span className="font-medium">&quot;{name.meaning}&quot;</span>
                   </p>
                 </div>
               </div>
