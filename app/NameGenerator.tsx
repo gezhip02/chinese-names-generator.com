@@ -1,7 +1,9 @@
-'use client';
+'use client'; // 添加这一行
+
 import { useState } from 'react';
 import { Sparkles, User2, UserRound, Loader2 } from 'lucide-react';
 import type { Gender, GeneratedName } from '@/types';
+import Link from 'next/link'; // 确保导入 Link 组件
 
 export default function NameGenerator() {
   const [gender, setGender] = useState<Gender>('male');

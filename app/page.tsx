@@ -1,10 +1,10 @@
 import NameGenerator from './NameGenerator';
-
+import PageLayout from './components/Layout/PageLayout';
 
 export default function Home() {
   return (
-    <main className="min-h-screen p-8 bg-gray-50">
+    <PageLayout showBreadcrumb={false}>
       <NameGenerator />
-    </main>
+    </PageLayout>
   );
 }
