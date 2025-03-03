@@ -4,11 +4,10 @@ import PageLayout from '../../components/Layout/PageLayout';
 import { getPostData } from '@/lib/posts';
 import ShareButton from '../../components/blog/ShareButton';
 
-
-// 修改类型定义，使其兼容 Next.js 15
-export default async function BlogPost({ params }: { params: Promise<{ slug: string }> | { slug: string } }) {
+// 修改类型定义，在 Next.js 15 中 params 必须是 Promise 类型
+export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
     // 确保 params 是 awaitable 的
-    const resolvedParams = params instanceof Promise ? await params : params;
+    const resolvedParams = await params;
     const { slug } = resolvedParams;
   
     if (!slug) {
@@ -24,7 +23,6 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
       );
     }
   
-    // 其余代码保持不变
     const post = await getPostData(slug);
   
     if (!post) {
