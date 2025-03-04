@@ -60,7 +60,7 @@ export default function NameGenerator() {
             with meaningful characters and proper pronunciation.
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-400 italic">
-            Note: Chinese names can be with or without surnames, just like "大山" (Dashan) or "马云" (Ma Yun).
+            Note: Chinese names can be with or without surnames, just like &quot;大山&quot; (Dashan) or &quot;马云&quot; (Ma Yun).
           </p>
         </div>
 
