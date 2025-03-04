@@ -41,10 +41,10 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
     return (
       <PageLayout>
         <div className="max-w-3xl mx-auto">
-          <article className="bg-white rounded-xl p-8 shadow-lg">
-            <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
+          <article className="bg-white rounded-xl p-4 md:p-8 shadow-lg">
+            <h1 className="text-2xl md:text-3xl font-bold mb-4 text-gray-900">{post.title}</h1>
   
-            <div className="flex items-center gap-4 text-sm text-gray-500 mb-8">
+            <div className="flex flex-wrap items-center gap-2 md:gap-4 text-sm text-gray-500 mb-6 md:mb-8">
               <span className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
                 {post.date}
@@ -59,16 +59,16 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
             </div>
   
             <div
-              className="prose prose-lg max-w-none"
+              className="prose prose-sm md:prose-lg max-w-none prose-headings:text-gray-900"
               dangerouslySetInnerHTML={{ __html: post.contentHtml || '' }}
             />
   
-            <div className="mt-8 pt-8 border-t">
+            <div className="mt-6 md:mt-8 pt-6 md:pt-8 border-t">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
                   <div>
-                    <p className="font-medium">{post.author || 'Anonymous'}</p>
+                    <p className="font-medium text-gray-900">{post.author || 'Anonymous'}</p>
                     <p className="text-sm text-gray-500">Writer</p>
                   </div>
                 </div>
