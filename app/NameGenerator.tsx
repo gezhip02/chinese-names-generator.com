@@ -110,7 +110,7 @@ export default function NameGenerator() {
                   type="text"
                   value={surname}
                   onChange={(e) => setSurname(e.target.value)}
-                  placeholder="Surname (optional)"
+                  placeholder="Surname"
                   disabled={!includeSurname}
                   className="px-4 py-2 rounded-lg border dark:border-gray-600 
                     bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-rose-500 outline-none
@@ -125,7 +125,7 @@ export default function NameGenerator() {
                 type="text"
                 value={englishName}
                 onChange={(e) => setEnglishName(e.target.value)}
-                placeholder="Your English name (optional)"
+                placeholder="Your English name"
                 className="px-4 py-2 rounded-lg border dark:border-gray-600 
                   bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-rose-500 outline-none"
               />
@@ -134,7 +134,7 @@ export default function NameGenerator() {
                 type="text"
                 value={keywords}
                 onChange={(e) => setKeywords(e.target.value)}
-                placeholder="Keywords (optional e.g. cloud, wisdom)"
+                placeholder="Keywords (e.g. cloud, wisdom)"
                 className="px-4 py-2 rounded-lg border dark:border-gray-600 
                   bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-rose-500 outline-none"
               />
