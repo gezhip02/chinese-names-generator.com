@@ -8,7 +8,8 @@ import BlogCategories from '../components/blog/BlogCategories';
 
 
 export default function BlogPageClient({ initialPosts }) {
-  const categories = ['All', 'Culture', 'Trends', 'History', 'Famous','Naming Tips'];
+  // const categories = ['All', 'Culture', 'Trends', 'History', 'Famous','Naming Tips'];
+  const categories = ['All', 'History', 'Famous','Naming Tips'];
   const [selectedCategory, setSelectedCategory] = useState('All');
 
 
