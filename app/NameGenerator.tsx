@@ -7,7 +7,10 @@ import Link from 'next/link'; // 确保导入 Link 组件
 
 export default function NameGenerator() {
   const [gender, setGender] = useState<Gender>('male');
-  const [surname, setSurname] = useState<string>();
+  const [surname, setSurname] = useState<string>('');
+  const [englishName, setEnglishName] = useState<string>('');
+  const [keywords, setKeywords] = useState<string>('');
+  const [includeSurname, setIncludeSurname] = useState<boolean>(true);
   const [generatedNames, setGeneratedNames] = useState<GeneratedName[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -22,7 +25,13 @@ export default function NameGenerator() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ gender, surname }),
+        body: JSON.stringify({ 
+          gender, 
+          surname: includeSurname ? surname : '', 
+          englishName,
+          keywords,
+          includeSurname
+        }),
       });
       
       const data = await response.json();
@@ -51,12 +60,13 @@ export default function NameGenerator() {
             with meaningful characters and proper pronunciation.
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-400 italic">
-            Note: Following Chinese convention, surnames are placed before given names.
+            Note: Chinese names can be with or without surnames, just like "大山" (Dashan) or "马云" (Ma Yun).
           </p>
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8">
-          <div className="flex flex-col md:flex-row gap-6 items-center">
+          <div className="flex flex-col gap-6">
+            {/* 性别选择 */}
             <div className="flex flex-wrap gap-4">
               {[
                 { value: 'random', icon: Sparkles, label: 'Random' },
@@ -83,17 +93,55 @@ export default function NameGenerator() {
               ))}
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto md:ml-auto">
+            {/* 姓氏选项 */}
+            <div className="flex items-center">
+              <label className="inline-flex items-center mr-2">
+                <input
+                  type="checkbox"
+                  checked={includeSurname}
+                  onChange={(e) => setIncludeSurname(e.target.checked)}
+                  className="rounded text-rose-500 focus:ring-rose-500"
+                />
+                <span className="ml-2 text-gray-700 dark:text-gray-300">Include surname</span>
+              </label>
+              
+              <div className={`flex-1 transition-all duration-300 ${includeSurname ? 'opacity-100 max-w-xs' : 'opacity-0 max-w-0 overflow-hidden'}`}>
+                <input
+                  type="text"
+                  value={surname}
+                  onChange={(e) => setSurname(e.target.value)}
+                  placeholder="Surname (optional)"
+                  disabled={!includeSurname}
+                  className="px-4 py-2 rounded-lg border dark:border-gray-600 
+                    bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-rose-500 outline-none
+                    w-full"
+                />
+              </div>
+            </div>
+
+            {/* 英文名和关键词 */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <input
                 type="text"
-                value={surname}
-                onChange={(e) => setSurname(e.target.value)}
-                placeholder="Surname"
+                value={englishName}
+                onChange={(e) => setEnglishName(e.target.value)}
+                placeholder="Your English name (optional)"
                 className="px-4 py-2 rounded-lg border dark:border-gray-600 
-                  bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-rose-500 outline-none
-                  w-full sm:w-32"
+                  bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-rose-500 outline-none"
               />
+              
+              <input
+                type="text"
+                value={keywords}
+                onChange={(e) => setKeywords(e.target.value)}
+                placeholder="Keywords (optional e.g. cloud, wisdom)"
+                className="px-4 py-2 rounded-lg border dark:border-gray-600 
+                  bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-rose-500 outline-none"
+              />
+            </div>
 
+            {/* 生成按钮 */}
+            <div className="flex justify-center mt-2">
               <button
                 onClick={handleSubmit}
                 disabled={loading}
@@ -122,7 +170,7 @@ export default function NameGenerator() {
         </div>
 
         {generatedNames.length > 0 && (
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {generatedNames.map((name, index) => (
               <div key={index} 
                 className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg 
@@ -130,7 +178,7 @@ export default function NameGenerator() {
                 <div className="text-center">
                   <h2 className="text-xl font-medium mb-2">{name.pinyin}</h2>
                   <p className="text-4xl mb-4 font-serif">{name.characters}</p>
-                  <p className="text-gray-600 dark:text-gray-300">
+                  <p className="text-gray-600 dark:text-gray-300 text-sm">
                     Meaning: <span className="font-medium">&quot;{name.meaning}&quot;</span>
                   </p>
                 </div>

@@ -2,26 +2,32 @@ import { NextResponse } from 'next/server';
 import type { Gender, ApiResponse } from '../../../types';
 import { commonSurnames } from '../../surnames/surnames.config';
 
+// 从环境变量获取缓存配置
+const MAX_CACHE_SIZE = parseInt(process.env.NAMES_CACHE_SIZE || '50', 10);
+const CACHE_CLEAR_INTERVAL = parseInt(process.env.NAMES_CACHE_CLEAR_INTERVAL || '900000', 10); // 默认15分钟
 
+// 简单的内存缓存，用于存储最近生成的名字
+const recentlyGeneratedNames = new Set<string>();
 
-// // 添加常见百家姓数组
-// const commonSurnames = [
-//   '李', '王', '张', '刘', '陈', '杨', '黄', '赵', '周', '吴',
-//   '徐', '孙', '朱', '马', '胡', '郭', '林', '何', '高', '梁',
-//   '郑', '罗', '宋', '谢', '唐', '韩', '曹', '许', '邓', '萧',
-//   '冯', '曾', '程', '蔡', '彭', '潘', '袁', '于', '董', '余',
-//   '苏', '叶', '吕', '魏', '蒋', '田', '杜', '丁', '沈', '姜',
-//   '范', '江', '傅', '钟', '卢', '汪', '戴', '崔', '任', '陆',
-//   '廖', '姚', '方', '金', '邱', '夏', '谭', '韦', '贾', '邹',
-//   '石', '熊', '孟', '秦', '阎', '薛', '侯', '雷', '白', '龙',
-//   '段', '郝', '孔', '邵', '史', '毛', '常', '万', '顾', '赖',
-//   '武', '康', '贺', '严', '尹', '钱', '施', '牛', '洪', '龚'
-// ];
+// 添加缓存最后清除时间
+let lastCacheClearTime = Date.now();
 
 // 获取随机姓氏的函数
 const getRandomSurname = () => {
   const randomIndex = Math.floor(Math.random() * commonSurnames.length);
   return commonSurnames[randomIndex].surname;
+};
+
+// 检查并清除缓存的函数
+const checkAndClearCache = () => {
+  const now = Date.now();
+  if (now - lastCacheClearTime > CACHE_CLEAR_INTERVAL) {
+    console.log(`清除名字缓存，已过${CACHE_CLEAR_INTERVAL/60000}分钟`);
+    recentlyGeneratedNames.clear();
+    lastCacheClearTime = now;
+    return true;
+  }
+  return false;
 };
 
 export async function POST(request: Request) {
@@ -40,86 +46,25 @@ export async function POST(request: Request) {
       );
     }
 
-    // 如果没有提供姓氏，随机生成一个
-    const { gender, surname = getRandomSurname() } = body;
+    // 解构所有可能的参数
+    const {
+      gender,
+      englishName = '',
+      surname = '',
+      keywords = '',
+      includeSurname = true  // 新增参数，控制是否包含姓氏
+    } = body;
     
-    // const prompt = `Generate three unique and culturally appropriate Chinese names with the following requirements:
-    // - Gender: ${gender}
-    // - Surnames: Zhang
-    // - Include: surname and given name
-    // - Cultural background: poetry
-    // - Style: modern
-    // - Format needed for each name:
-    //   1. Pinyin (with tones)
-    //   2. Chinese characters
-    //   3. Meaning of the given name
-    // - Ensure each name is meaningful and fits the specified gender.
-    // - Avoid repeating names or using overly common combinations.
-    // - Introduce variation by considering different naming conventions, cultural references, and historical contexts.
-    // - Return the following in JSON format without adding any additional content:
-    // [
-    //   {
-    //     "pinyin": "surname givenname",
-    //     "characters": "姓名",
-    //     "meaning": "meaning of given name"
-    //   },
-    //   {
-    //     "pinyin": "surname givenname",
-    //     "characters": "姓名",
-    //     "meaning": "meaning of given name"
-    //   },
-    //   {
-    //     "pinyin": "surname givenname",
-    //     "characters": "姓名",
-    //     "meaning": "meaning of given name"
-    //   }
-    // ]`;
+    // 修改这里的逻辑，确保用户提供的姓氏被正确使用
+    const finalSurname = includeSurname 
+      ? (surname && surname.trim() !== '' ? surname.trim() : getRandomSurname()) 
+      : '';
+    
+    console.log('使用的姓氏:', finalSurname); // 添加日志，便于调试
+    // 根据提供的参数构建提示词
+    const prompt = buildPrompt(gender, finalSurname, englishName, keywords, includeSurname);
 
-    const prompt = `Generate three unique and culturally appropriate Chinese names with the following requirements:
-    - Gender: ${gender}
-    - Surnames: ${surname}
-    - Include: surname and given name
-    - Cultural backgrounds (randomly choose different ones for each name):
-      * Classical poetry and literature
-      * Modern art and culture
-      * Nature and seasons
-      * Philosophy and wisdom
-      * Science and innovation
-    - Name characteristics (ensure variety):
-      * Use different number of characters in given names (one or two characters)
-      * Mix traditional and contemporary elements
-      * Incorporate different themes (e.g., strength, elegance, wisdom, creativity)
-      * Use varied tone combinations
-    - Format needed for each name:
-      1. Pinyin (with tones)
-      2. Chinese characters
-      3. Meaning of the given name
-    - Additional requirements:
-      * Each name must be completely different in style and theme
-      * Avoid common character combinations
-      * Consider multiple layers of meaning
-      * Use characters that are both meaningful and uncommon
-      * Ensure names are easy to pronounce while being distinctive
-    - Return the following in JSON format without adding any additional content:
-    [
-      {
-        "pinyin": "surname givenname",
-        "characters": "姓名",
-        "meaning": "meaning of given name"
-      },
-      {
-        "pinyin": "surname givenname",
-        "characters": "姓名",
-        "meaning": "meaning of given name"
-      },
-      {
-        "pinyin": "surname givenname",
-        "characters": "姓名",
-        "meaning": "meaning of given name"
-      }
-    ]
-    Important: Each generated name must be unique and different from previous responses. Avoid repetitive patterns or similar-sounding names.`
-
+    console.log(prompt);
     // 添加请求超时
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 300000); // 30秒超时
@@ -162,16 +107,15 @@ export async function POST(request: Request) {
     if (!result.choices?.[0]?.message?.content) {
       throw new Error('Invalid API response format');
     }
-
     try {
       let rawContent = result.choices[0].message.content;
-      
+
       // 提取所有有效的JSON对象
       const extractValidObjects = (content: string) => {
         const objects: any[] = [];
         const regex = /\{(?:[^{}]|(?:\{[^{}]*\}))*\}/g;
         const matches = content.match(regex);
-        
+
         if (matches) {
           matches.forEach(match => {
             try {
@@ -186,53 +130,159 @@ export async function POST(request: Request) {
         }
         return objects;
       };
-
       let nameData = extractValidObjects(rawContent);
-
+  
+      // 处理名字数据，根据是否包含姓氏进行调整
+      nameData = nameData.map(name => {
+        // 如果不包含姓氏，确保characters和pinyin字段只包含名字部分
+        if (!body.includeSurname) {
+          // 确保返回的数据格式正确
+          return {
+            ...name,
+            // 可能需要调整字段，确保不包含姓氏
+            characters: name.characters,
+            pinyin: name.pinyin
+          };
+        }
+        return name;
+      });
+      
+      // 记录原始名字数据，以防过滤后没有剩余名字
+      const originalNameData = [...nameData];
+      
+      // 过滤掉缓存中已存在的名字
+      nameData = nameData.filter(name => !recentlyGeneratedNames.has(name.characters));
+  
+      // 如果过滤后没有名字了，则使用原始名字数据
+      if (nameData.length === 0 && originalNameData.length > 0) {
+        console.log('所有生成的名字都在缓存中，使用原始名字数据');
+        nameData = originalNameData;
+      }
+  
       // 只保留前3个有效的名字
       nameData = nameData.slice(0, 3);
-
+  
       // 如果没有足够的有效名字，返回错误
       if (nameData.length === 0) {
         throw new Error('No valid name data found');
       }
-
+  
+      // 将新生成的名字添加到缓存中
+      nameData.forEach(name => {
+        recentlyGeneratedNames.add(name.characters);
+        // 如果缓存太大，删除最早添加的项
+        if (recentlyGeneratedNames.size > MAX_CACHE_SIZE) {
+          const firstItem = recentlyGeneratedNames.values().next().value;
+          recentlyGeneratedNames.delete(firstItem);
+        }
+      });
+  
       // 返回成功结果，即使不满3个名字也返回
       return NextResponse.json(nameData);
-
     } catch (parseError) {
       console.error('Error parsing name data:', parseError);
       console.error('Raw content:', result.choices[0].message.content);
       throw new Error('Failed to parse generated name data');
     }
-
-  } catch (error) {
-    console.error('Error generating name:', error);
-
-    // 根据错误类型返回不同的状态码
-    if (error.name === 'AbortError') {
-      return NextResponse.json(
-        { error: 'Request timeout' },
-        { status: 408 }
-      );
+    function buildPrompt(gender: string, surname: string, englishName: string, keywords: string, includeSurname: boolean): string {
+      // 基础提示词部分
+      let basePrompt = `Generate three unique and friendly Chinese names suitable for foreigners with the following requirements:
+      - Gender: ${gender}`;
+  // 根据是否包含姓氏调整提示词
+  if (includeSurname && surname) {
+    basePrompt += `
+  - Surnames: ${surname}
+  - Include: surname and given name
+  - Important: All generated names MUST use the exact surname "${surname}" as provided`;
+  } else if (includeSurname) {
+    basePrompt += `
+  - Surnames: ${surname}
+  - Include: surname and given name`;
+  } else {
+    basePrompt += `
+  - Generate given names only without surnames
+  - Each name should be complete and standalone without requiring a surname`;
+  }
+  // 添加英文名相关提示（如果提供）
+  if (englishName) {
+    basePrompt += `
+  - English name to reference: ${englishName}
+  - Try to create a Chinese name that:
+    * Has similar sounds to parts of the English name when possible
+    * Captures the essence or meaning of the English name if applicable
+    * Maintains cultural appropriateness while honoring the connection to the English name`;
+  }
+  // 添加关键词相关提示（如果提供）
+  if (keywords) {
+    basePrompt += `
+  - Keywords to incorporate: ${keywords}
+  - The generated names should:
+    * Reflect the meaning or theme of these keywords
+    * Use characters that relate to these concepts
+    * Balance the keyword meanings with overall name harmony`;
+  }
+  // 如果没有提供额外参数，使用更简单友好的名字生成指南
+  if (!englishName && !keywords) {
+    basePrompt += `
+  - Key requirements for foreigner-friendly Chinese names:
+    * Use simple, common characters that are easy to write and remember
+    * Ensure characters have positive meanings that are easily explained
+    * Choose characters with straightforward pronunciations (avoid difficult tones or sounds)
+    * Limit given names to one or two characters maximum`;
+  }
+  // 如果有缓存的名字，添加排除提示
+  if (recentlyGeneratedNames.size > 0) {
+    const recentNames = Array.from(recentlyGeneratedNames).slice(0, 10).join(', '); // 只取最近10个名字
+    basePrompt += `
+  - Avoid generating these recently used names: ${recentNames}`;
+  }
+  // 添加随机种子以增加多样性
+  const randomSeed = Math.floor(Math.random() * 10000);
+  basePrompt += `
+  - Use this random seed for inspiration: ${randomSeed}`;
+  // 通用的名字生成指南
+  basePrompt += `
+      - Cultural inspirations (choose different ones for each name):
+        * Modern pop culture and contemporary China
+        * Nature elements (simple concepts like sun, moon, water, etc.)
+        * Common positive qualities (kindness, joy, peace, etc.)
+        * International/cross-cultural themes
+      
+      - Name variety:
+        * Include at least one single-character given name
+        * Include names with different tone patterns
+        * Ensure each name has a distinct meaning and sound
+      
+      - Format needed for each name:
+        1. Pinyin (with tones)
+        2. Chinese characters
+        3. Simple meaning explanation (2-3 sentences maximum)
+      
+      - Return the following in JSON format without adding any additional content:
+      [
+        {
+          "pinyin": "surname givenname",
+          "characters": "姓名",
+          "meaning": "meaning of given name"
+        },
+        {
+          "pinyin": "surname givenname",
+          "characters": "姓名",
+          "meaning": "meaning of given name"
+        },
+        {
+          "pinyin": "surname givenname",
+          "characters": "姓名",
+          "meaning": "meaning of given name"
+        }
+      ]
+      Important: Generate names that would be different each time this prompt is used. Avoid common or stereotypical name patterns.`;
+      return basePrompt;
     }
-    
-    if (error.message === 'Missing API configuration') {
-      return NextResponse.json(
-        { error: 'Server configuration error' },
-        { status: 500 }
-      );
-    }
-
-    if (error.message === 'No valid name data found') {
-      return NextResponse.json(
-        { error: 'Failed to generate valid names' },
-        { status: 500 }
-      );
-    }
-
+  } catch (error: any) {
+    console.error('Error generating names:', error);
     return NextResponse.json(
-      { error: 'Failed to generate name' },
+      { error: error.message || 'Failed to generate names' },
       { status: 500 }
     );
   }
