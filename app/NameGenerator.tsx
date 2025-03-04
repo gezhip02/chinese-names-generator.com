@@ -83,7 +83,7 @@ export default function NameGenerator() {
               ))}
             </div>
 
-            <div className="flex items-center gap-4 ml-auto">
+            <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto md:ml-auto">
               <input
                 type="text"
                 value={surname}
@@ -91,16 +91,16 @@ export default function NameGenerator() {
                 placeholder="Surname"
                 className="px-4 py-2 rounded-lg border dark:border-gray-600 
                   bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-rose-500 outline-none
-                  w-32"
+                  w-full sm:w-32"
               />
 
               <button
                 onClick={handleSubmit}
                 disabled={loading}
-                className="px-6 py-2 bg-gradient-to-r from-rose-500 to-violet-500 
+                className="px-6 py-2.5 bg-gradient-to-r from-rose-500 to-violet-500 
                   text-white rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed
                   hover:from-rose-600 hover:to-violet-600 transition-colors flex items-center justify-center gap-2
-                  whitespace-nowrap"
+                  whitespace-nowrap w-full sm:w-auto text-base"
               >
                 {loading ? (
                   <>
