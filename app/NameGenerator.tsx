@@ -179,7 +179,7 @@ export default function NameGenerator() {
                   <h2 className="text-xl font-medium mb-2">{name.pinyin}</h2>
                   <p className="text-4xl mb-4 font-serif">{name.characters}</p>
                   <p className="text-gray-600 dark:text-gray-300 text-sm">
-                    Meaning: <span className="font-medium">&quot;{name.meaning}&quot;</span>
+                    Meaning: <span className="font-medium">&ldquo;{name.meaning}&rdquo;</span>
                   </p>
                 </div>
               </div>
@@ -326,7 +326,7 @@ export default function NameGenerator() {
               <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Why Having a Chinese Name Matters</h3>
               <p className="leading-relaxed">
 
-                A Chinese name is more than just a translation – it&apos;s a bridge to Chinese culture and society.
+                A Chinese name is more than just a translation -- it&apos;s a bridge to Chinese culture and society.
                 Whether you&apos;re learning Mandarin, doing business in China, traveling, or connecting with
                 Chinese friends and colleagues, having a proper Chinese name demonstrates respect and
                 facilitates deeper cultural connections.
@@ -363,7 +363,7 @@ export default function NameGenerator() {
                   <p className="text-gray-700 dark:text-gray-300">
                     Chinese names traditionally have the family name first, followed by the given name. Each character has its own meaning,
                     and names are chosen for their symbolic significance rather than just their sound. The combination of characters creates
-                    a unique meaning that often expresses parents' hopes and wishes for their child.
+                    a unique meaning that often expresses parents&apos; hopes and wishes for their child.
                   </p>
                 </div>
 

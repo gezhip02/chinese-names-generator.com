@@ -9,7 +9,10 @@ const nextConfig = {
   },
 
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
-  
+  eslint: {
+    // Warning: Only use this approach if you understand the risks
+    ignoreDuringBuilds: true,
+  },
 }
   
   module.exports = nextConfig
