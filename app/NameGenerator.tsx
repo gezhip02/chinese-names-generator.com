@@ -1,9 +1,9 @@
-'use client'; // 添加这一行
+'use client';
 
 import { useState } from 'react';
 import { Sparkles, User2, UserRound, Loader2 } from 'lucide-react';
 import type { Gender, GeneratedName } from '@/types';
-import Link from 'next/link'; // 确保导入 Link 组件
+import Link from 'next/link';
 
 export default function NameGenerator() {
   const [gender, setGender] = useState<Gender>('male');
@@ -186,6 +186,281 @@ export default function NameGenerator() {
             ))}
           </div>
         )}
+
+        {/* SEO 增强内容部分 */}
+        <section className="mt-16 space-y-8 text-gray-700 dark:text-gray-300">
+          <div className="border-t border-gray-200 dark:border-gray-700 pt-8">
+            <h2 className="text-3xl font-bold mb-6 text-center text-gray-800 dark:text-gray-100">Chinese Name Generator - Your Gateway to Authentic Chinese Names</h2>
+            
+            <div className="grid md:grid-cols-2 gap-8 mb-12">
+              <div className="space-y-4">
+                <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Why Choose Our Chinese Name Generator?</h3>
+                <ul className="space-y-2">
+                  <li className="flex items-start">
+                    <span className="text-rose-500 mr-2">•</span>
+                    <span>Culturally authentic names based on traditional Chinese naming principles</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-rose-500 mr-2">•</span>
+                    <span>Personalized names that reflect your identity and preferences</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-rose-500 mr-2">•</span>
+                    <span>Beautiful Chinese characters with meaningful interpretations</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-rose-500 mr-2">•</span>
+                    <span>Accurate pinyin pronunciations for proper Chinese speaking</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-rose-500 mr-2">•</span>
+                    <span>Option to include or exclude traditional Chinese surnames</span>
+                  </li>
+                </ul>
+              </div>
+              
+              <div className="space-y-4">
+                <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Features</h3>
+                <ul className="space-y-2">
+                  <li className="flex items-start">
+                    <span className="text-rose-500 mr-2">•</span>
+                    <span>Multiple name generation options: random, gender-specific, or keyword-based</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-rose-500 mr-2">•</span>
+                    <span>Detailed meaning explanations for each generated name</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-rose-500 mr-2">•</span>
+                    <span>Integration of your English name into Chinese characters</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-rose-500 mr-2">•</span>
+                    <span>Keyword-based generation for names with specific meanings</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-rose-500 mr-2">•</span>
+                    <span>Easy-to-use interface with responsive design for all devices</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            
+            <div className="space-y-6">
+              <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">How to Use the Chinese Name Generator</h3>
+              
+              <div className="space-y-4">
+                <div>
+                  <p className="font-medium">1. Select Your Preferences:</p>
+                  <ul className="pl-6 space-y-1 mt-2">
+                    <li className="flex items-start">
+                      <span className="text-rose-500 mr-2">•</span>
+                      <span>Choose gender (male, female, or random) for appropriate character selection</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-rose-500 mr-2">•</span>
+                      <span>Decide whether to include a Chinese surname</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-rose-500 mr-2">•</span>
+                      <span>Enter your English name for phonetic adaptation (optional)</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-rose-500 mr-2">•</span>
+                      <span>Provide keywords to influence the meaning of your generated name</span>
+                    </li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <p className="font-medium">2. Generate Your Chinese Names:</p>
+                  <ul className="pl-6 space-y-1 mt-2">
+                    <li className="flex items-start">
+                      <span className="text-rose-500 mr-2">•</span>
+                      <span>Click the "Generate names" button to create multiple name options</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-rose-500 mr-2">•</span>
+                      <span>View Chinese characters, pinyin pronunciation, and meanings</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-rose-500 mr-2">•</span>
+                      <span>Compare different options to find your perfect Chinese name</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-12 space-y-4">
+              <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">About Chinese Names</h3>
+              <p className="leading-relaxed">
+                Chinese names typically consist of a family name (姓, xìng) followed by a given name (名, míng). 
+                Family names are usually single characters, while given names can have one or two characters. 
+                Each character is carefully chosen for its meaning, pronunciation, and visual aesthetics.
+              </p>
+              <p className="leading-relaxed">
+                Our name generator follows authentic Chinese naming practices by considering:
+              </p>
+              <ul className="space-y-2 mt-4">
+                <li className="flex items-start">
+                  <span className="text-rose-500 mr-2">•</span>
+                  <span>Character meaning and symbolism</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-rose-500 mr-2">•</span>
+                  <span>Appropriate gender associations</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-rose-500 mr-2">•</span>
+                  <span>Balance of character elements</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-rose-500 mr-2">•</span>
+                  <span>Modern usage and cultural relevance</span>
+                </li>
+              </ul>
+            </div>
+            
+            <div className="mt-12 space-y-4">
+              <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Why Having a Chinese Name Matters</h3>
+              <p className="leading-relaxed">
+                A Chinese name is more than just a translation – it's a bridge to Chinese culture and society. 
+                Whether you're learning Mandarin, doing business in China, traveling, or connecting with 
+                Chinese friends and colleagues, having a proper Chinese name demonstrates respect and 
+                facilitates deeper cultural connections.
+              </p>
+              <p className="leading-relaxed">
+                Our generator helps you create a name that:
+              </p>
+              <ul className="space-y-2 mt-4">
+                <li className="flex items-start">
+                  <span className="text-rose-500 mr-2">•</span>
+                  <span>Reflects your personality and values</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-rose-500 mr-2">•</span>
+                  <span>Is easy for Chinese speakers to pronounce and remember</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-rose-500 mr-2">•</span>
+                  <span>Carries positive meanings and cultural significance</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-rose-500 mr-2">•</span>
+                  <span>Works well in both personal and professional contexts</span>
+                </li>
+              </ul>
+            </div>
+            
+            <div className="mt-12 space-y-6">
+              <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Frequently Asked Questions</h3>
+              
+              <div className="space-y-6">
+                <div className="p-4 bg-gray-50 dark:bg-gray-750 rounded-lg">
+                  <h4 className="font-semibold mb-2 text-gray-800 dark:text-gray-100">How do Chinese names differ from Western names?</h4>
+                  <p className="text-gray-700 dark:text-gray-300">
+                    Chinese names traditionally have the family name first, followed by the given name. Each character has its own meaning, 
+                    and names are chosen for their symbolic significance rather than just their sound. The combination of characters creates 
+                    a unique meaning that often expresses parents' hopes and wishes for their child.
+                  </p>
+                </div>
+                
+                <div className="p-4 bg-gray-50 dark:bg-gray-750 rounded-lg">
+                  <h4 className="font-semibold mb-2 text-gray-800 dark:text-gray-100">What makes a good Chinese name?</h4>
+                  <p className="text-gray-700 dark:text-gray-300">
+                    A good Chinese name should have positive meanings, be easy to pronounce, use appropriate characters, and follow cultural 
+                    naming conventions. The characters should complement each other in meaning and sound harmonious when spoken. For non-Chinese 
+                    individuals, names that reflect personal qualities or aspirations while being culturally respectful are ideal.
+                  </p>
+                </div>
+                
+                <div className="p-4 bg-gray-50 dark:bg-gray-750 rounded-lg">
+                  <h4 className="font-semibold mb-2 text-gray-800 dark:text-gray-100">Can I use my Chinese name officially?</h4>
+                  <p className="text-gray-700 dark:text-gray-300">
+                    While your generated Chinese name might not be legally recognized in non-Chinese jurisdictions, it can be used socially, 
+                    professionally, and culturally when interacting with Chinese-speaking communities. Many expatriates, students, and 
+                    business professionals adopt Chinese names to facilitate communications and build relationships in Chinese contexts.
+                  </p>
+                </div>
+                
+                <div className="p-4 bg-gray-50 dark:bg-gray-750 rounded-lg">
+                  <h4 className="font-semibold mb-2 text-gray-800 dark:text-gray-100">How should I choose between multiple name suggestions?</h4>
+                  <p className="text-gray-700 dark:text-gray-300">
+                    Consider the meaning, how well it represents you, and how easily it can be pronounced. You might want to ask a native 
+                    Chinese speaker for their opinion on your options. Look for names that resonate with your personality or values, and 
+                    check that the meaning aligns with qualities you identify with or aspire toward.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        {/* Schema.org structured data for SEO */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Chinese Name Generator",
+            "description": "Generate authentic Chinese names with meaningful characters and proper pronunciation.",
+            "applicationCategory": "UtilityApplication",
+            "operatingSystem": "Any",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            },
+            "featureList": [
+              "Personalized name generation",
+              "Gender-specific options",
+              "Surname integration",
+              "Keyword-based name creation",
+              "Name meaning explanations"
+            ]
+          })
+        }} />
+        
+        <script type="application/ld+json" dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "How do Chinese names differ from Western names?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Chinese names traditionally have the family name first, followed by the given name. Each character has its own meaning, and names are chosen for their symbolic significance rather than just their sound."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What makes a good Chinese name?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "A good Chinese name should have positive meanings, be easy to pronounce, use appropriate characters, and follow cultural naming conventions. The characters should complement each other in meaning and sound harmonious when spoken."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can I use my Chinese name officially?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "While your generated Chinese name might not be legally recognized in non-Chinese jurisdictions, it can be used socially, professionally, and culturally when interacting with Chinese-speaking communities."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How should I choose between multiple name suggestions?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Consider the meaning, how well it represents you, and how easily it can be pronounced. You might want to ask a native Chinese speaker for their opinion on your options."
+                }
+              }
+            ]
+          })
+        }} />
       </div>
     </div>
   );
