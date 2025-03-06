@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Sparkles, User2, UserRound, Loader2 } from 'lucide-react';
 import type { Gender, GeneratedName } from '@/types';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 
 export default function NameGenerator() {
   const [gender, setGender] = useState<Gender>('male');
@@ -14,6 +15,31 @@ export default function NameGenerator() {
   const [generatedNames, setGeneratedNames] = useState<GeneratedName[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  
+  // 获取URL参数
+  const searchParams = useSearchParams();
+  
+  // 在组件挂载时检查URL参数
+  useEffect(() => {
+    const surnameParam = searchParams.get('surname');
+    const includeSurnameParam = searchParams.get('includeSurname');
+    
+    if (surnameParam) {
+      setSurname(surnameParam);
+    }
+    
+    if (includeSurnameParam === 'true') {
+      setIncludeSurname(true);
+    } else if (includeSurnameParam === 'false') {
+      setIncludeSurname(false);
+    }
+    
+    // 如果有surname参数，可以自动生成名字
+    if (surnameParam && includeSurnameParam === 'true') {
+      // 可选：自动触发名字生成
+      // handleSubmit();
+    }
+  }, [searchParams]);
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -60,7 +86,7 @@ export default function NameGenerator() {
             with meaningful characters and proper pronunciation.
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-400 italic">
-            Note: Chinese names can be with or without surnames, just like &quot;大山&quot; (Dashan) or &quot;马云&quot; (Ma Yun).
+            Note: Chinese names can be with or without surnames, just like "大山" (Dashan) or "马云" (Ma Yun).
           </p>
         </div>
 
@@ -325,7 +351,6 @@ export default function NameGenerator() {
             <div className="mt-12 space-y-4">
               <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Why Having a Chinese Name Matters</h3>
               <p className="leading-relaxed">
-
                 A Chinese name is more than just a translation -- it&apos;s a bridge to Chinese culture and society.
                 Whether you&apos;re learning Mandarin, doing business in China, traveling, or connecting with
                 Chinese friends and colleagues, having a proper Chinese name demonstrates respect and
