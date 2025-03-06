@@ -325,6 +325,7 @@ export default function NameGenerator() {
             <div className="mt-12 space-y-4">
               <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Why Having a Chinese Name Matters</h3>
               <p className="leading-relaxed">
+
                 A Chinese name is more than just a translation – it&apos;s a bridge to Chinese culture and society. 
                 Whether you&apos;re learning Mandarin, doing business in China, traveling, or connecting with 
                 Chinese friends and colleagues, having a proper Chinese name demonstrates respect and 
