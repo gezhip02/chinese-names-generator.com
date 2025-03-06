@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { Sparkles, User2, UserRound, Loader2 } from 'lucide-react';
 import type { Gender, GeneratedName } from '@/types';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
-export default function NameGenerator() {
+// 提取一个单独的组件来使用 useSearchParams
+function NameGeneratorInner() {
   const [gender, setGender] = useState<Gender>('male');
   const [surname, setSurname] = useState<string>('');
   const [englishName, setEnglishName] = useState<string>('');
@@ -489,5 +490,14 @@ export default function NameGenerator() {
         }} />
       </div>
     </div>
+  );
+}
+
+// 主导出组件，使用 Suspense 包裹含有 useSearchParams 的组件
+export default function NameGenerator() {
+  return (
+    <Suspense fallback={<div className="flex justify-center items-center min-h-screen"><Loader2 className="h-8 w-8 animate-spin" /></div>}>
+      <NameGeneratorInner />
+    </Suspense>
   );
 }
