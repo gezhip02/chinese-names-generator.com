@@ -17,6 +17,7 @@ const removeTones = (pinyin: string) => {
 export default function SurnamesPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredSurnames, setFilteredSurnames] = useState(commonSurnames);
+  const [showScrollToTop, setShowScrollToTop] = useState(false);
 
   // 使用useEffect优化过滤性能
   useEffect(() => {
@@ -33,6 +34,20 @@ export default function SurnamesPage() {
     return () => {
       document.documentElement.style.scrollBehavior = '';
     };
+  }, []);
+
+  // 监听滚动事件以决定是否显示返回顶部按钮
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 200) {
+        setShowScrollToTop(true);
+      } else {
+        setShowScrollToTop(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // 根据首字母分组
@@ -55,7 +70,7 @@ export default function SurnamesPage() {
         <meta name="description" content="Explore the traditional Chinese Hundred Family Surnames (百家姓) with pinyin pronunciation. Find the most common Chinese family names and their meanings." />
         <meta name="keywords" content="Chinese surnames, 百家姓, bai jia xing, Chinese family names, Chinese last names, Chinese culture, Chinese heritage" />
         <link rel="canonical" href="https://yourwebsite.com/surnames" />
-        
+
         {/* 添加结构化数据 */}
         <script type="application/ld+json">
           {`
@@ -184,13 +199,27 @@ export default function SurnamesPage() {
           <footer className="mt-10 text-center text-gray-500 text-sm pb-8">
             <p>Explore our complete collection of {commonSurnames.length} traditional Chinese surnames.</p>
             <p className="mt-4">
-                <Link href="/blog?category=Naming%20Tips" className="text-rose-500 hover:underline">
-                  Learn more about Chinese naming traditions
-                </Link>
-              </p>
-            </footer>
+              <Link href="/about-chinese-names" className="text-rose-500 hover:underline">
+                Learn more about Chinese naming traditions
+              </Link>
+            </p>
+          </footer>
         </article>
       </PageLayout>
+
+      {/* 返回顶部按钮 */}
+      {showScrollToTop && (
+        <button
+          onClick={() => window.scrollTo({ top: 0 })}
+          className="fixed bottom-4 right-4 bg-rose-500 text-white p-3 rounded-full shadow-lg hover:bg-rose-600 transition-colors duration-300"
+          aria-label="Return to top"
+        >
+          &uarr;
+        </button>
+      )}
     </>
   );
 }
+
+
+
