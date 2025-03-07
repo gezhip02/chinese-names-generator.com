@@ -30,6 +30,11 @@ const checkAndClearCache = () => {
   return false;
 };
 
+// 检查姓氏是否为复姓的函数
+const isCompoundSurname = (surname: string) => {
+  return surname.length > 1;
+};
+
 export async function POST(request: Request) {
   try {
     // 验证环境变量
@@ -184,72 +189,101 @@ export async function POST(request: Request) {
       console.error('Raw content:', result.choices[0].message.content);
       throw new Error('Failed to parse generated name data');
     }
+    
     function buildPrompt(gender: string, surname: string, englishName: string, keywords: string, includeSurname: boolean): string {
+      // 判断姓氏是否为复姓
+      const isCompound = surname.length > 1;
+      
       // 基础提示词部分
       let basePrompt = `Generate three unique and friendly Chinese names suitable for foreigners with the following requirements:
       - Gender: ${gender}`;
-  // 根据是否包含姓氏调整提示词
-  if (includeSurname && surname) {
-    basePrompt += `
+      
+      // 根据是否包含姓氏调整提示词
+      if (includeSurname && surname) {
+        basePrompt += `
   - Surnames: ${surname}
   - Include: surname and given name
   - Important: All generated names MUST use the exact surname "${surname}" as provided`;
-  } else if (includeSurname) {
-    basePrompt += `
+        
+        // 添加对复姓的特殊说明
+        if (isCompound) {
+          basePrompt += `
+  - Note: "${surname}" is a compound surname (复姓) that should be treated as a single surname unit, not as separate characters`;
+        }
+      } else if (includeSurname) {
+        basePrompt += `
   - Surnames: ${surname}
   - Include: surname and given name`;
-  } else {
-    basePrompt += `
+      } else {
+        basePrompt += `
   - Generate given names only without surnames
   - Each name should be complete and standalone without requiring a surname`;
-  }
-  // 添加英文名相关提示（如果提供）
-  if (englishName) {
-    basePrompt += `
+      }
+      
+      // 添加英文名相关提示（如果提供）
+      if (englishName) {
+        basePrompt += `
   - English name to reference: ${englishName}
   - Try to create a Chinese name that:
     * Has similar sounds to parts of the English name when possible
     * Captures the essence or meaning of the English name if applicable
     * Maintains cultural appropriateness while honoring the connection to the English name`;
-  }
-  // 添加关键词相关提示（如果提供）
-  if (keywords) {
-    basePrompt += `
+      }
+      
+      // 添加关键词相关提示（如果提供）
+      if (keywords) {
+        basePrompt += `
   - Keywords to incorporate: ${keywords}
   - The generated names should:
     * Reflect the meaning or theme of these keywords
     * Use characters that relate to these concepts
     * Balance the keyword meanings with overall name harmony`;
-  }
-  // 如果没有提供额外参数，使用更简单友好的名字生成指南
-  if (!englishName && !keywords) {
-    basePrompt += `
+      }
+      
+      // 如果没有提供额外参数，使用更简单友好的名字生成指南
+      if (!englishName && !keywords) {
+        basePrompt += `
   - Key requirements for foreigner-friendly Chinese names:
     * Use simple, common characters that are easy to write and remember
     * Ensure characters have positive meanings that are easily explained
     * Choose characters with straightforward pronunciations (avoid difficult tones or sounds)
     * Limit given names to one or two characters maximum`;
-  }
-  // 如果有缓存的名字，添加排除提示
-  if (recentlyGeneratedNames.size > 0) {
-    const recentNames = Array.from(recentlyGeneratedNames).slice(0, 10).join(', '); // 只取最近10个名字
-    basePrompt += `
+      }
+      
+      // 如果有缓存的名字，添加排除提示
+      if (recentlyGeneratedNames.size > 0) {
+        const recentNames = Array.from(recentlyGeneratedNames).slice(0, 10).join(', '); // 只取最近10个名字
+        basePrompt += `
   - Avoid generating these recently used names: ${recentNames}`;
-  }
-  // 添加随机种子以增加多样性
-  const randomSeed = Math.floor(Math.random() * 10000);
-  basePrompt += `
+      }
+      
+      // 添加随机种子以增加多样性
+      const randomSeed = Math.floor(Math.random() * 10000);
+      basePrompt += `
   - Use this random seed for inspiration: ${randomSeed}`;
-  // 通用的名字生成指南
-  basePrompt += `
+      
+      // 通用的名字生成指南，对复姓和单姓进行区分处理
+      basePrompt += `
       - Cultural inspirations (choose different ones for each name):
         * Modern pop culture and contemporary China
         * Nature elements (simple concepts like sun, moon, water, etc.)
         * Common positive qualities (kindness, joy, peace, etc.)
         * International/cross-cultural themes
       
-      - Name variety:
-        * Include at least one single-character given name
+      - Name variety:`;
+      
+      // 针对复姓的特殊说明
+      if (isCompound && includeSurname) {
+        basePrompt += `
+        * IMPORTANT: For compound surnames like "${surname}": The given name MUST be one or two characters
+        * For this compound surname "${surname}": Include at least one name with a two-character given name`;
+      } else {
+        basePrompt += `
+        * For single-character surnames: Include at least one single-character given name
+        * For double-character surnames: Given name should be one or two characters`;
+      }
+      
+      basePrompt += `
         * Include names with different tone patterns
         * Ensure each name has a distinct meaning and sound
       
@@ -277,6 +311,7 @@ export async function POST(request: Request) {
         }
       ]
       Important: Generate names that would be different each time this prompt is used. Avoid common or stereotypical name patterns.`;
+      
       return basePrompt;
     }
   } catch (error: any) {
