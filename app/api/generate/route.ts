@@ -189,7 +189,6 @@ export async function POST(request: Request) {
       console.error('Raw content:', result.choices[0].message.content);
       throw new Error('Failed to parse generated name data');
     }
-    
     function buildPrompt(gender: string, surname: string, englishName: string, keywords: string, includeSurname: boolean): string {
       // 判断姓氏是否为复姓
       const isCompound = surname.length > 1;
@@ -261,59 +260,54 @@ export async function POST(request: Request) {
       const randomSeed = Math.floor(Math.random() * 10000);
       basePrompt += `
   - Use this random seed for inspiration: ${randomSeed}`;
-      
-      // 通用的名字生成指南，对复姓和单姓进行区分处理
       basePrompt += `
-      - Cultural inspirations (choose different ones for each name):
-        * Modern pop culture and contemporary China
-        * Nature elements (simple concepts like sun, moon, water, etc.)
-        * Common positive qualities (kindness, joy, peace, etc.)
-        * International/cross-cultural themes
-      
-      - Name variety:`;
-      
-      // 针对复姓的特殊说明
-      if (isCompound && includeSurname) {
-        basePrompt += `
-        * IMPORTANT: For compound surnames like "${surname}": The given name MUST be one or two characters
-        * For this compound surname "${surname}": Include at least one name with a two-character given name`;
-      } else {
-        basePrompt += `
-        * For single-character surnames: Include at least one single-character given name
-        * For double-character surnames: Given name should be one or two characters`;
-      }
-      
-      basePrompt += `
-        * Include names with different tone patterns
-        * Ensure each name has a distinct meaning and sound
-      
-      - Format needed for each name:
-        1. Pinyin (with tones)
-        2. Chinese characters
-        3. Simple meaning explanation (2-3 sentences maximum)
-      
-      - Return the following in JSON format without adding any additional content:
-      [
-        {
-          "pinyin": "surname givenname",
-          "characters": "姓名",
-          "meaning": "meaning of given name"
-        },
-        {
-          "pinyin": "surname givenname",
-          "characters": "姓名",
-          "meaning": "meaning of given name"
-        },
-        {
-          "pinyin": "surname givenname",
-          "characters": "姓名",
-          "meaning": "meaning of given name"
-        }
-      ]
-      Important: Generate names that would be different each time this prompt is used. Avoid common or stereotypical name patterns.`;
-      
-      return basePrompt;
+  - Cultural inspirations (choose different ones for each name):
+    * Modern pop culture and contemporary China
+    * Nature elements (simple concepts like sun, moon, water, etc.)
+    * Common positive qualities (kindness, joy, peace, etc.)
+    * International/cross-cultural themes
+  - Name variety:`;
+  if (isCompound && includeSurname) {
+    basePrompt += `
+    * For this compound surname "${surname}": The given name should be one or two characters
+    * Include at least one name with a single-character given name and one with a two-character given name`;
+  } else if (includeSurname) {
+    basePrompt += `
+    * For this single-character surname "${surname}": The given name should be one or two characters
+    * Include at least one name with a single-character given name and one with a two-character given name`;
+  } else {
+    basePrompt += `
+    * Given names should be one or two characters
+    * Include at least one single-character name and one two-character name`;
+  }
+  basePrompt += `
+    * Include names with different tone patterns
+    * Ensure each name has a distinct meaning and sound
+  - Format needed for each name:
+    1. Pinyin (with tones)
+    2. Chinese characters
+    3. Simple meaning explanation (2-3 sentences maximum)
+  - Return the following in JSON format without adding any additional content:
+  [
+    {
+      "pinyin": "surname givenname",
+      "characters": "姓名",
+      "meaning": "meaning of given name"
+    },
+    {
+      "pinyin": "surname givenname",
+      "characters": "姓名",
+      "meaning": "meaning of given name"
+    },
+    {
+      "pinyin": "surname givenname",
+      "characters": "姓名",
+      "meaning": "meaning of given name"
     }
+  ]
+  Important: Generate names that would be different each time this prompt is used. Avoid common or stereotypical name patterns.`;
+  return basePrompt;
+}
   } catch (error: any) {
     console.error('Error generating names:', error);
     return NextResponse.json(

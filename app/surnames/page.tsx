@@ -66,9 +66,9 @@ export default function SurnamesPage() {
   return (
     <>
       <Head>
-        <title>Chinese Surnames (百家姓) - Complete List of Common Chinese Family Names</title>
-        <meta name="description" content="Explore the traditional Chinese Hundred Family Surnames (百家姓) with pinyin pronunciation. Find the most common Chinese family names and their meanings." />
-        <meta name="keywords" content="Chinese surnames, 百家姓, bai jia xing, Chinese family names, Chinese last names, Chinese culture, Chinese heritage" />
+        <title>Chinese Surnames (百家姓) - Comprehensive List</title>
+        <meta name="description" content="Discover the traditional Chinese Hundred Family Surnames (百家姓) with pinyin pronunciation and meanings." />
+        <meta name="keywords" content="Chinese surnames, 百家姓, bai jia xing, Chinese family names, Chinese last names, Chinese culture, heritage" />
         <link rel="canonical" href="https://yourwebsite.com/surnames" />
 
         {/* 添加结构化数据 */}
@@ -78,7 +78,7 @@ export default function SurnamesPage() {
               "@context": "https://schema.org",
               "@type": "WebPage",
               "name": "Chinese Surnames (百家姓)",
-              "description": "Complete list of common Chinese family names with pinyin pronunciation",
+              "description": "Comprehensive list of common Chinese family names with pinyin pronunciation and meanings.",
               "url": "https://yourwebsite.com/surnames",
               "mainEntity": {
                 "@type": "ItemList",
@@ -199,7 +199,7 @@ export default function SurnamesPage() {
           <footer className="mt-10 text-center text-gray-500 text-sm pb-8">
             <p>Explore our complete collection of {commonSurnames.length} traditional Chinese surnames.</p>
             <p className="mt-4">
-              <Link href="/about-chinese-names" className="text-rose-500 hover:underline">
+              <Link href="/blog?category=Naming%20Tips" className="text-rose-500 hover:underline">
                 Learn more about Chinese naming traditions
               </Link>
             </p>
