@@ -7,6 +7,7 @@ import PageLayout from '../components/Layout/PageLayout';
 import BlogCategories from '../components/blog/BlogCategories';
 import { useSearchParams, useRouter } from 'next/navigation';
 
+
 export default function BlogPageClient({ initialPosts }) {
   // const categories = ['All', 'Culture', 'Trends', 'History', 'Famous','Naming Tips'];
   const categories = ['All', 'History', 'Famous','Naming Tips'];
