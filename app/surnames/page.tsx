@@ -184,7 +184,7 @@ export default function SurnamesPage() {
           <footer className="mt-10 text-center text-gray-500 text-sm pb-8">
             <p>Explore our complete collection of {commonSurnames.length} traditional Chinese surnames.</p>
             <p className="mt-4">
-              <Link href="/about-chinese-names" className="text-rose-500 hover:underline">
+              <Link href="/blog?category=Naming%20Tips" className="text-rose-500 hover:underline">
                 Learn more about Chinese naming traditions
               </Link>
             </p>

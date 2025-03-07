@@ -1,17 +1,46 @@
 // app/blog/BlogPageClient.tsx
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Calendar, Clock, ChevronRight } from 'lucide-react';
 import PageLayout from '../components/Layout/PageLayout';
 import BlogCategories from '../components/blog/BlogCategories';
-
+import { useSearchParams, useRouter } from 'next/navigation';
 
 export default function BlogPageClient({ initialPosts }) {
   // const categories = ['All', 'Culture', 'Trends', 'History', 'Famous','Naming Tips'];
   const categories = ['All', 'History', 'Famous','Naming Tips'];
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const categoryParam = searchParams.get('category');
+  
+  // 如果URL中有category参数，则使用它，否则默认为'All'
+  const [selectedCategory, setSelectedCategory] = useState(
+    categoryParam && categories.includes(categoryParam) ? categoryParam : 'All'
+  );
 
+  // 当URL参数变化时更新选中的类别
+  useEffect(() => {
+    if (categoryParam && categories.includes(categoryParam)) {
+      setSelectedCategory(categoryParam);
+    } else if (!categoryParam) {
+      setSelectedCategory('All');
+    }
+  }, [categoryParam, categories]);
+
+  // 处理类别变更，同时更新URL
+  const handleCategoryChange = (category) => {
+    setSelectedCategory(category);
+    
+    // 更新URL参数
+    if (category === 'All') {
+      // 如果选择"All"，则移除category参数
+      router.push('/blog');
+    } else {
+      // 否则添加category参数
+      router.push(`/blog?category=${encodeURIComponent(category)}`);
+    }
+  };
 
   const filteredPosts = selectedCategory === 'All'
     ? initialPosts
@@ -27,7 +56,7 @@ export default function BlogPageClient({ initialPosts }) {
         <BlogCategories 
           categories={categories} 
           selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
+          onCategoryChange={handleCategoryChange}
         />
 
         <div className="space-y-4 md:space-y-6">
